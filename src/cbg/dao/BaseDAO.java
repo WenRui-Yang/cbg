@@ -4,16 +4,17 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import cbg.jdbc.DBConn;
+import cbg.util.StringUtil;
 
 
 public class BaseDAO<T> {
@@ -330,6 +331,8 @@ public class BaseDAO<T> {
         return entity;
     }
     
+    
+    
     /**
      * 通过参数查询
      */
@@ -380,7 +383,7 @@ public class BaseDAO<T> {
                 statement.setString(++j, (String)object);
             }
         }
-       
+        
         //执行sql,取得查询结果集.
         ResultSet rs = conn.execQuery(statement);
         //记数器,记录循环到第几个字段
@@ -424,6 +427,190 @@ public class BaseDAO<T> {
         statement.close();
         
         return entity;
+    }
+    
+    
+    
+    /**
+     * 统计数量
+     */
+    public int countByParam(Map<String,Object> param) throws Exception{
+        String sql = "select count(*) from " + persistentClass.getSimpleName().toLowerCase() + " where 1=1 ";
+        
+        //通过子类的构造函数,获得参数化类型的具体类型.比如BaseDAO<T>也就是获得T的具体类型
+        T entity = persistentClass.newInstance();
+        
+        //存放Pojo(或被操作表)主键的方法对象
+        Method idMethod = null;
+        
+        List<Method> list = this.matchPojoMethods(entity, "set");
+        Iterator<Method> iter = list.iterator();
+        
+        List<String> paramList = new ArrayList<>();
+        //过滤取得Method对象
+        while(iter.hasNext()) {
+            Method tempMethod = iter.next();
+            if(param != null){
+            	for (Map.Entry<String, Object> entry : param.entrySet()) {
+            		
+            		 if((entry.getKey()).equalsIgnoreCase(tempMethod.getName().substring(3))) {
+            			 idMethod = tempMethod;
+            			 String tempName = idMethod.getName().substring(3,4).toLowerCase()+idMethod.getName().substring(4);
+            			 //第一个字母转为小写
+                         sql += " and "+ tempName + " = ? ";
+                         paramList.add(tempName);
+                     } 
+            	}
+            }
+        }
+        //封装语句完毕,打印sql语句
+        //System.out.println(sql);
+        
+        //获得连接
+        PreparedStatement statement = this.connection.prepareStatement(sql);
+        
+        int j = 0;
+        Object object =null;
+        //
+        for (String s :paramList) {
+        	object = param.get(s);
+        	 //判断id的类型
+            if(object instanceof Integer) {
+                statement.setInt(++j, (Integer)object);
+            } else if(object instanceof String){
+                statement.setString(++j, (String)object);
+            }
+        }
+        
+        //执行sql,取得查询结果集.
+        ResultSet rs = conn.execQuery(statement);
+        
+        int total = 0;
+        if (rs.next()){
+        	total = rs.getInt(1);
+         }
+        //关闭结果集
+        rs.close();
+                
+        //关闭预编译对象
+        statement.close();
+        
+        return total;
+    }
+    
+    /**
+     * 通过参数查询List
+     * @param param
+     * @param order
+     * @param page  
+     * @param rows
+     * @return
+     * @throws Exception
+     */
+    public List findListByParam(Map<String,Object> param,String sort,String order,int page,int rows) throws Exception{
+        String sql = "select * from " + persistentClass.getSimpleName().toLowerCase() + " where 1=1 ";
+        
+        //通过子类的构造函数,获得参数化类型的具体类型.比如BaseDAO<T>也就是获得T的具体类型
+        T entity = persistentClass.newInstance();
+        
+        //存放Pojo(或被操作表)主键的方法对象
+        Method idMethod = null;
+        
+        List<Method> list = this.matchPojoMethods(entity, "set");
+        Iterator<Method> iter = list.iterator();
+        
+        List<String> paramList = new ArrayList<>();
+        //过滤取得Method对象
+        while(iter.hasNext()) {
+            Method tempMethod = iter.next();
+            if(param != null){
+            	for (Map.Entry<String, Object> entry : param.entrySet()) {
+            		
+            		 if((entry.getKey()).equalsIgnoreCase(tempMethod.getName().substring(3))) {
+            			 idMethod = tempMethod;
+            			 String tempName = idMethod.getName().substring(3,4).toLowerCase()+idMethod.getName().substring(4);
+            			 //第一个字母转为小写
+                         sql += " and "+ tempName + " = ? ";
+                         paramList.add(tempName);
+                     } 
+            	}
+            }
+        }
+        
+        if(StringUtil.isNotEmpty(order)){
+        	sql+=" order by "+ sort +" "+order;
+        }
+        
+        if(StringUtil.isNotEmpty(page) && StringUtil.isNotEmpty(rows)){
+        	sql+=" limit "+(page-1)*rows + ","+rows;
+        }
+        //封装语句完毕,打印sql语句
+        //System.out.println(sql);
+        
+        //获得连接
+        PreparedStatement statement = this.connection.prepareStatement(sql);
+        
+        int j = 0;
+        Object object =null;
+        //
+        for (String s :paramList) {
+        	object = param.get(s);
+        	 //判断id的类型
+            if(object instanceof Integer) {
+                statement.setInt(++j, (Integer)object);
+            } else if(object instanceof String){
+                statement.setString(++j, (String)object);
+            }
+        }
+        
+        
+        //执行sql,取得查询结果集.
+        ResultSet rs = conn.execQuery(statement);
+        //记数器,记录循环到第几个字段
+        int i = 0;
+                
+        //把指针指向迭代器第一行
+        iter = list.iterator();
+        
+        List<T> returnlist = new ArrayList<>();
+        //封装
+        while(rs.next()) {
+        	entity = persistentClass.newInstance();
+        	iter = list.iterator();
+            while(iter.hasNext()) {
+                Method method = iter.next();
+                if(method.getParameterTypes()[0].getSimpleName().indexOf("String") != -1) {
+                    //由于list集合中,method对象取出的方法顺序与数据库字段顺序不一致(比如:list的第一个方法是setDate,而数据库按顺序取的是"123"值)
+                    //所以数据库字段采用名字对应的方式取.
+                    this.setString(method, entity, rs.getString(method.getName().substring(3).toLowerCase()));
+                } else if(method.getParameterTypes()[0].getSimpleName().indexOf("Date") != -1){
+                    this.setDate(method, entity, rs.getDate(method.getName().substring(3).toLowerCase()));
+                } else if(method.getParameterTypes()[0].getSimpleName().indexOf("InputStream") != -1) {
+                    this.setBlob(method, entity, rs.getBlob(method.getName().substring(3).toLowerCase()).getBinaryStream());
+                } else if(method.getParameterTypes()[0].getSimpleName().indexOf("Long") != -1){
+                	if(rs.getObject(method.getName().substring(3).toLowerCase()) == null){
+                		this.setNull(method, entity, null);
+                	}else{
+                		this.setLong(method, entity, rs.getLong(method.getName().substring(3).toLowerCase()));
+                	}
+                }else{
+                	if(rs.getObject(method.getName().substring(3).toLowerCase()) == null){
+                		this.setNull(method, entity, null);
+                	}else{
+                		this.setInt(method, entity, rs.getInt(method.getName().substring(3).toLowerCase()));
+                	}
+                }    
+            }
+            returnlist.add(entity);
+        }
+        
+        //关闭结果集
+        rs.close();
+                
+        //关闭预编译对象
+        statement.close();
+        
+        return returnlist;
     }
     
     /**

@@ -103,7 +103,7 @@ public class CbgController  {
 				
 				//设置获取时间
 				Date date = new Date(new java.util.Date().getTime());
-				cbgEntity.setGetTime(date);
+				//cbgEntity.setGetTime(getTimestamp(date));
 				cbgEntity.setId(CbgRoleDao.getUUID());
 				
 				//设置链接
@@ -204,4 +204,8 @@ public class CbgController  {
 		}
 		System.out.println("完成");*/
 	}
+	
+	public static java.sql.Timestamp getTimestamp(Date date) {
+    	return new java.sql.Timestamp(date.getTime());
+    	}
 }

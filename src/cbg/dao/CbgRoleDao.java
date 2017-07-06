@@ -14,7 +14,7 @@ public class CbgRoleDao extends BaseDAO<CbgEntity> {
         return true;
     }
 
-    public List<CbgEntity> addCbgEntity(int id) throws Exception {
+    public List<CbgEntity> getCbgEntityList(int id) throws Exception {
         List<CbgEntity> lstEntity = new ArrayList<CbgEntity>();
         CbgEntity entity = findById(id);
         // 将当前封转好的数据装入对象中
