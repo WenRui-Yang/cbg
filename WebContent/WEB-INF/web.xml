@@ -10,6 +10,21 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   
+  
+  <servlet>
+  	<servlet-name>RoleServlet</servlet-name>
+  	<servlet-class>cbg.controller.RoleServlet</servlet-class>
+  	<!--这个数字代表启动的优先级  -->
+  	<load-on-startup>5</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>RoleServlet</servlet-name>
+  	<url-pattern>/servlet/roleServlet</url-pattern>
+  </servlet-mapping>
+  
+  
+  
   <servlet>
   	<servlet-name>CbgServlet</servlet-name>
   	<servlet-class>cbg.controller.CbgServlet</servlet-class>

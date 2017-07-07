@@ -77,7 +77,7 @@ public class BaseDAO<T> {
         sql = sql.substring(0, sql.lastIndexOf(",")) + ")";
         
         //到此SQL语句拼接完成,打印SQL语句
-        System.out.println(sql);
+        //System.out.println(sql);
         
         //获得预编译对象的引用
         PreparedStatement statement = connection.prepareStatement(sql);

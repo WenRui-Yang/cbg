@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
 
 /**
  * 字符串处理及转换工具类
- * @author  张代浩
  */
 public class StringUtil {
 	private static Pattern numericPattern = Pattern.compile("^[0-9\\-]+$");
