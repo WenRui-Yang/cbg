@@ -35,21 +35,15 @@
 						<div style="padding-top:5px;"></div>
 						
 						<div class="form-group">
-							<label class="col-lg-3 control-label">公众帐号名称:</label>
-							<div class="col-lg-7">
-								<input type="text" class="form-control" name="accountname" id="accountname">
-							</div>
-						</div>
-						<div class="form-group">
-		                    <label class="col-md-3 control-label">1</label>
+		                    <label class="col-md-3 control-label">人修花费</label>
 		                    <div class="col-md-9"><p class="form-control-static">${expt}W</p></div>
 		                </div>
 						<div class="form-group">
-		                    <label class="col-md-3 control-label">2</label>
+		                    <label class="col-md-3 control-label">宠修花费</label>
 		                    <div class="col-md-9"><p class="form-control-static">${bbexpt}W</p></div>
 		                </div>
 						<div class="form-group">
-		                    <label class="col-md-3 control-label">3</label>
+		                    <label class="col-md-3 control-label">师门技能花费</label>
 		                    <div class="col-md-9"><p class="form-control-static">${skill}W</p></div>
 		                </div>
 	                </div>
