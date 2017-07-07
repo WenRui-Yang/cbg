@@ -42,7 +42,7 @@ public class PriceUtil {
 	}
 	
 	//修炼
-	private int getxiulian(int level){
+	public int getxiulian(int level){
 		int sum = 0;
 		//2  花费
 		int array[] = {30,42,58,78,102,130,162,198,238,282,330,382,438,498,562,630,702,778,858,942,1030,1122,1218,1318,1422};
@@ -54,7 +54,7 @@ public class PriceUtil {
 	}
 	
 	//BB修炼
-	private int getbbxiulian(int level){
+	public int getbbxiulian(int level){
 		int sum = 0;
 		//花费经验
 		int array[] = {150,210,290,390,510,650,810,990,1190,1410,1650,1910,2190,2490,2810,3150,3510,3890,4290,4710,5150,5610,6090,6590,7110};

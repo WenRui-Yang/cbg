@@ -34,4 +34,14 @@
   	<servlet-name>CbgServlet</servlet-name>
   	<url-pattern>/servlet/cbgServlet</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>RoleDetailServlet</servlet-name>
+  	<servlet-class>cbg.controller.RoleDetailServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>RoleDetailServlet</servlet-name>
+  	<url-pattern>/servlet/roleDetailServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

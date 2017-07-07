@@ -457,7 +457,18 @@ public class BaseDAO<T> {
             			 idMethod = tempMethod;
             			 String tempName = idMethod.getName().substring(3,4).toLowerCase()+idMethod.getName().substring(4);
             			 //第一个字母转为小写
-                         sql += " and "+ tempName + " = ? ";
+            			 
+            			 Object object = param.get(tempName);
+            			 if(object instanceof String){
+            				 if((((String) object).contains(","))){
+            					 sql += " and " +tempName + " >= ? "+" and "+tempName + " <= ? ";
+            				 }else{
+            					 sql += " and "+ tempName + " = ? ";
+            				 }
+            			 }else{
+            				 sql += " and "+ tempName + " = ? ";
+            			 }
+            			 
                          paramList.add(tempName);
                      } 
             	}
@@ -478,7 +489,17 @@ public class BaseDAO<T> {
             if(object instanceof Integer) {
                 statement.setInt(++j, (Integer)object);
             } else if(object instanceof String){
-                statement.setString(++j, (String)object);
+            	if((((String) object).contains(","))){
+            		if(s.equals("price")){
+            			statement.setInt(++j, Integer.valueOf(((String) object).split(",")[0]));
+                		statement.setInt(++j, Integer.valueOf(((String) object).split(",")[1]));
+            		}else{
+            			statement.setString(++j, ((String) object).split(",")[0]);
+                		statement.setString(++j, ((String) object).split(",")[1]);
+            		}
+            	}else{
+            		statement.setString(++j, (String)object);
+            	}
             }
         }
         
@@ -528,16 +549,28 @@ public class BaseDAO<T> {
             		
             		 if((entry.getKey()).equalsIgnoreCase(tempMethod.getName().substring(3))) {
             			 idMethod = tempMethod;
+            			 
+            			//第一个字母转为小写
             			 String tempName = idMethod.getName().substring(3,4).toLowerCase()+idMethod.getName().substring(4);
-            			 //第一个字母转为小写
-                         sql += " and "+ tempName + " = ? ";
+            			 
+            			 Object object = param.get(tempName);
+            			 if(object instanceof String){
+            				 if((((String) object).contains(","))){
+            					 sql += " and " +tempName + " >= ? "+" and "+tempName + " <= ? ";
+            				 }else{
+            					 sql += " and "+ tempName + " = ? ";
+            				 }
+            			 }else{
+            				 sql += " and "+ tempName + " = ? ";
+            			 }
+                         
                          paramList.add(tempName);
                      } 
             	}
             }
         }
         
-        if(StringUtil.isNotEmpty(order)){
+        if(StringUtil.isNotEmpty(sort) && StringUtil.isNotEmpty(order)){
         	sql+=" order by "+ sort +" "+order;
         }
         
@@ -559,7 +592,18 @@ public class BaseDAO<T> {
             if(object instanceof Integer) {
                 statement.setInt(++j, (Integer)object);
             } else if(object instanceof String){
-                statement.setString(++j, (String)object);
+            	if((((String) object).contains(","))){
+            		if(s.equals("price")){
+            			statement.setInt(++j, Integer.valueOf(((String) object).split(",")[0]));
+                		statement.setInt(++j, Integer.valueOf(((String) object).split(",")[1]));
+            		}else{
+            			statement.setString(++j, ((String) object).split(",")[0]);
+                		statement.setString(++j, ((String) object).split(",")[1]);
+            		}
+            		
+            	}else{
+            		statement.setString(++j, (String)object);
+            	}
             }
         }
         

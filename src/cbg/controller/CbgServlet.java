@@ -37,9 +37,19 @@ public class CbgServlet extends HttpServlet{
 		dg.setField(field);
 		
 		Map<String,	 Object> queryparam = new HashMap<>();
-		/*queryparam.put("roleid", cbgEntity.getRoleid());
-		queryparam.put("area_name", cbgEntity.getArea_name());
-		queryparam.put("server_name", cbgEntity.getServer_name());*/
+		String s = request.getParameter("queryparam");
+		if(request.getParameter("queryparam[level]").split(",").length == 2){
+			queryparam.put("level", request.getParameter("queryparam[level]"));
+		}
+		if(request.getParameter("queryparam[price]").split(",").length == 2){
+			queryparam.put("price", request.getParameter("queryparam[price]"));
+		}
+		if(request.getParameter("queryparam[expt_total]").split(",").length == 2 && StringUtil.isNotEmpty(request.getParameter("queryparam[expt_total]").split(",")[0])){
+			queryparam.put("expt_total", request.getParameter("queryparam[expt_total]"));
+		}
+		if(request.getParameter("queryparam[bb_expt_total]").split(",").length == 2 && StringUtil.isNotEmpty(request.getParameter("queryparam[bb_expt_total]").split(",")[0]) ){
+			queryparam.put("bb_expt_total", request.getParameter("queryparam[bb_expt_total]"));
+		}
 		
 		String sort = request.getParameter("sort");
 		dg.setSort(sort);

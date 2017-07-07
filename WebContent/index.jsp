@@ -46,6 +46,15 @@
 	<div id="page-content">
 			
 		<div class="panel">
+			<div id="searchDiv" style="padding: 10px 0 0 10px;">
+				等级:<input type="text" style="padding-bottom:6px;" id="levelmin" />至
+					<input type="text" style="padding-bottom:6px;" id="levelmax" />
+				价格:<input type="text" style="padding-bottom:6px;" id="pricemin" />至
+					<input type="text" style="padding-bottom:6px;" id="pricemax" />
+				人修总和:<input type="text" style="padding-bottom:6px;" id="expt" />
+				宠修总和:<input type="text" style="padding-bottom:6px;" id="bbexpt" />
+				<button class="btn btn-mint" onclick="loadKeyword();"><i class="ion-search"></i> 查询</button>
+			</div>
 			<div id="dicToolbar" class="table-toolbar-left">
 				<div style="float:left;margin-left:10px;">
 					<button onclick="searchReset();" class="btn btn-mint"><i class="ion-loop"></i> 重置</button>
@@ -59,6 +68,44 @@
 		</div>
 	</div>
 	<!--End page content-->
+	
+	
+	<!--addGzTypeModal-->
+    <div class="modal fade" id="addGzTypeModal" role="dialog" tabindex="-1" aria-labelledby="addDicModal" aria-hidden="true">
+    	<input id="optype" name="optype" type="hidden" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!--Modal header-->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><i class="pci-cross pci-circle"></i></button>
+                    <h4 class="modal-title">详情</h4>
+                </div>
+                <!--Modal body-->
+                <form id="addGzTypeForm" method="post" class="form-horizontal">
+                	<div class="modal-body">
+                		<div class="form-group">
+							<!-- <label class="col-lg-3 control-label">关键字：</label>
+							<div class="col-lg-7">
+								<textarea rows="15" cols="80" class="form-control" name="rescontent" id="rescontent"></textarea>
+							</div> -->
+							<div style="overflow:hidden;clear:both;">
+								<div style="float:left;width:100%;">
+									<iframe name="quotesframe"  id="quotesframe" src="" marginwidth="0" marginheight="0" onLoad="iFrameHeight()";style="overflow: scroll !important; border: none; ">
+				        			</iframe>
+								</div>
+							</div>
+						</div>
+	                </div>
+	                <!--Modal footer-->
+	                <div class="modal-footer">
+	                    <button data-dismiss="modal" class="btn btn-default" type="button">确定</button>
+	                    <!-- <button class="btn btn-primary">确定</button> -->
+	                </div>
+				</form>
+            </div>
+        </div>
+    </div>
+    <!--addDicTypeModal-->
 </body>
 </html>
 

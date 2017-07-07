@@ -16,11 +16,17 @@ function loadKwType(){
         url: "servlet/cbgServlet?field=id,nickname,price,xingjiabi,cbgurl,server_name,time_left,expt_total,bb_expt_total,full_life_skill_num,level,getTime", //获取数据的Servlet地址   
         striped: true,  //表格显示条纹  
         queryParams: function queryParams(params) {   //设置查询参数
+        	var queryparam = new Object();
+        	queryparam.level = $("#levelmin").val()+","+$("#levelmax").val();
+        	queryparam.price= $("#pricemin").val()+","+$("#pricemax").val();
+        	queryparam.expt_total= $("#expt").val()+",150";
+        	queryparam. bb_expt_total= $("#bbexpt").val()+",100";
             var param = {
         		page: params.offset/params.limit+1,
         		rows: params.limit,
         		sort: params.sort,
                 order:params.order,
+                queryparam:queryparam,
             };
             return param;
         },
@@ -77,6 +83,9 @@ function loadKwType(){
         	title: '昵称',
         	align: 'center',
         	sortable : true,
+        },{
+        	title: '操作',
+        	formatter: operateFormatter,
         }],
         toolbar:"#dicToolbar",
         responseHandler: function(res) {
@@ -88,8 +97,7 @@ function loadKwType(){
     });
 	 function operateFormatter(value, row) {
 		 var id = row.id;
-		 var div =  "<button onclick=\"delKeyword('"+id+"\');\" class=\"btn btn-danger\">删除</button>";
-		 div +=  "&nbsp;<button onclick=\"responseMessage('"+id+"\');\" class=\"btn btn-mint\">快捷回复</button>";
+		 var div =  "<button onclick=\"getRoleInfo('"+id+"\');\" class=\"btn btn-danger\">详情</button>";
 		 return div;
 	 };
 	 function urlformat(value, row) {
@@ -97,5 +105,20 @@ function loadKwType(){
 		 return div;
 	 };
 	 
+}
+
+
+function getRoleInfo(id){
+	
+	$("#quotesframe").attr("src","servlet/roleDetailServlet?id="+id);
+	$("#addGzTypeModal").modal('show');
+}
+
+function iFrameHeight(){
+	
+	
+    var ifm= document.getElementById("quotesframe"); 
+    ifm.height=document.documentElement.clientHeight*0.5;
+    ifm.width=document.documentElement.clientWidth;
 }
 
