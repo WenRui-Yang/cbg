@@ -571,7 +571,11 @@ public class BaseDAO<T> {
         }
         
         if(StringUtil.isNotEmpty(sort) && StringUtil.isNotEmpty(order)){
-        	sql+=" order by "+ sort +" "+order;
+        	if(sort.equals("price")){
+        		sql+=" order by LENGTH(price) "+order+" ,price " +order;
+        	}else{
+        		sql+=" order by "+ sort +" "+order;
+        	}
         }
         
         if(StringUtil.isNotEmpty(page) && StringUtil.isNotEmpty(rows)){

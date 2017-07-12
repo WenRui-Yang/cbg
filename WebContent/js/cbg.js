@@ -94,6 +94,12 @@ function loadKwType(){
                 "rows": res.rows   //数据
              };
         },
+        onSort:function(name,order){
+        	$("#loadEffect").modal('show');
+        },
+        onLoadSuccess:function(data){
+        	$("#loadEffect").modal('hide');
+        },
     });
 	 function operateFormatter(value, row) {
 		 var id = row.id;

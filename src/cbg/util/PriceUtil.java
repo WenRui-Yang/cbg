@@ -38,6 +38,25 @@ public class PriceUtil {
 		value += getSkilla(c.getSchool_skill_7());
 		
 		//辅助技能
+		value += getshenghuo(c.getSkill_qiang_shen());
+		value += getshenghuo(c.getSkill_anqi());
+		value += getshenghuo(c.getSkill_caifeng());
+		value += getshenghuo(c.getSkill_cuiling());
+		value += getshenghuo(c.getSkill_dazao());
+		value += getshenghuo(c.getSkill_jianshen());
+		value += getshenghuo(c.getSkill_lianjin());
+		value += getshenghuo(c.getSkill_ming_xiang());
+		value += getshenghuo(c.getSkill_pengren());
+		value += getshenghuo(c.getSkill_qiaojiang());
+		value += getshenghuo(c.getSkill_ronglian());
+		value += getshenghuo(c.getSkill_taoli());
+		value += getshenghuo(c.getSkill_yangsheng());
+		value += getshenghuo(c.getSkill_zhongyao());
+		value += getshenghuo(c.getSkill_zhuibu());
+		value += getshenghuo(c.getSew_skill());
+		value += getshenghuo(c.getSkill_lingshi());
+		
+		
 		return value;
 	}
 	
@@ -92,8 +111,17 @@ public class PriceUtil {
 	
 	//生活技能
 	public int getshenghuo(int levels){
-		int array[] = {3,6,9,14,19,25,33,43,55,69,87,108,133,162,196,236,281,333,393,459,535,619,713,828,934,1062,
-				1202,1357,1525,1710,1910,2127,2362,2617,2891,3187,3504};
-		return 0;
+		long sum = 0L;
+		int costlevel = levels/25;
+		if(costlevel >6){
+			costlevel = 6;
+		}
+		int casharray[] = {6283,111949,624526,2087756,5279766,11213056};
+		int banggongarray[] = {325,950,1575,2200,2825,3450};
+		for(int i = 0;i<costlevel;i++){
+			sum += casharray[i];
+			sum += banggongarray[i]/1000*30*mhb*10;
+		}
+		return (int) (sum/10000);
 	}
 }

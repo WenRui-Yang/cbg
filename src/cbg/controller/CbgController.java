@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.text.StyledEditorKit.ForegroundAction;
+
 import org.json.JSONException;
 
 import com.google.gson.Gson;
@@ -15,6 +17,7 @@ import cbg.HttpRequest;
 import cbg.JSONParse;
 import cbg.dao.CbgRoleDao;
 import cbg.entity.CbgEntity;
+import cbg.test.CbgDaoTest;
 import cbg.util.PriceUtil;
 import cbg.util.StringUtil;
 
@@ -35,16 +38,17 @@ public class CbgController  {
 	boolean pausestatus = true;
 	static CbgRoleDao cbgdao = new CbgRoleDao();
 	
-	public static void main(String[] args) {
+	
+	/*public static void main(String[] args) {
 		
 		try {
-			//runOnce();
-			getRole(1);
+			
+			//getRole(1);
 			cbgdao.closeConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	public static void getRole(int page) throws Exception{
 		
@@ -181,31 +185,52 @@ public class CbgController  {
 		
 	}
 	
-	public void runOnce(){
-		/*List<CbgEntity> localCbgRole = systemService.getList(CbgEntity.class);
+	public static void runOnce(int page,int rows) throws Exception{
+		List<CbgEntity> localCbgRole = cbgdao.findListByParam(null, "", "", page, rows);
 		PriceUtil priceUtil = new PriceUtil();
 		int i = 0;
 		for (CbgEntity cbgEntity : localCbgRole) {
-			//if(cbgEntity.getXingjiabi() == 0){
+				//if(cbgEntity.getXingjiabi() == 0){
 				int xingjiabi = priceUtil.value(cbgEntity)/(Double.valueOf(cbgEntity.getPrice()).intValue());
+				
+				cbgdao.deleteCbgEntity(cbgEntity);;
 				cbgEntity.setXingjiabi(xingjiabi);
-				systemService.saveOrUpdate(cbgEntity);
-				System.out.println("性价比计算"+(i++));
+				cbgdao.save(cbgEntity);
+				System.out.println(page+"性价比计算"+(i++));
 			//}
-			if(StringUtil.isEmpty(cbgEntity.getCbgurl())){
-				String cbgurl = "http://xyq.cbg.163.com/cgi-bin/equipquery.py";
-				cbgurl += "?act=overall_search_show_detail&serverid="+cbgEntity.getServerid();
-				cbgurl += "&ordersn="+cbgEntity.getGame_ordersn();
-				cbgurl += "&equip_refer=1&from=singlemessage&isappinstalled=0#collect_panel";
-				cbgEntity.setCbgurl(cbgurl);
-				systemService.saveOrUpdate(cbgEntity);
-			}
 			
 		}
-		System.out.println("完成");*/
+		System.out.println("完成");
 	}
 	
 	public static java.sql.Timestamp getTimestamp(Date date) {
     	return new java.sql.Timestamp(date.getTime());
-    	}
+    }
+	
+	static class MyThread implements Runnable {
+		
+		public int page = 1;
+		public int rows = 1000;
+		
+		
+		@Override
+		public void run() {
+		    // 子线程需要做的事情
+			try {
+				runOnce(page,rows);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		 }
+		
+		public static void main(String[] args) {
+			
+			for(int page =1;page <24;page++){
+				MyThread my = new MyThread();
+				my.page =page;
+				my.rows =1000;
+				new Thread(my).start();
+			}
+		}
+	}
 }
