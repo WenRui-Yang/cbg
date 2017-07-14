@@ -4,7 +4,7 @@ import cbg.entity.CbgEntity;
 
 public class PriceUtil {
 	//系数 100R/mhb
-	private static int mhb=1200;
+	public static int mhb=1200;
 	/**
 	 * 一个大致的估算
 	 * @param c

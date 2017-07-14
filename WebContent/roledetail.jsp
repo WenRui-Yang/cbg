@@ -41,10 +41,16 @@
 						<div class="form-group">
 		                    <label class="col-md-3 control-label">宠修花费</label>
 		                    <div class="col-md-9"><p class="form-control-static">${bbexpt}W</p></div>
+		                    <div>全吃修炼果，游戏币按照100块钱1200w，修炼果按照75w一个</div>
 		                </div>
 						<div class="form-group">
 		                    <label class="col-md-3 control-label">师门技能花费</label>
 		                    <div class="col-md-9"><p class="form-control-static">${skill}W</p></div>
+		                </div>
+						<div class="form-group">
+		                    <label class="col-md-3 control-label">生活技能花费</label>
+		                    <div class="col-md-9"><p class="form-control-static">${shenghuo}W</p></div>
+		                    <div>帮贡按照30元1000点，游戏币按照100块钱1200w</div>
 		                </div>
 	                </div>
 				</form>
