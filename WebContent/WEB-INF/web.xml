@@ -44,4 +44,15 @@
   	<servlet-name>RoleDetailServlet</servlet-name>
   	<url-pattern>/servlet/roleDetailServlet</url-pattern>
   </servlet-mapping>
+  
+  	<servlet>
+        <servlet-name>ScheduleServlet</servlet-name>
+        <servlet-class>cbg.controller.ScheduleServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+	</servlet>
+	<!-- 定时 -->
+	<servlet-mapping>
+	     <servlet-name>ScheduleServlet</servlet-name>
+	     <url-pattern>/servlet/scheduleServlet</url-pattern>
+	</servlet-mapping>
 </web-app>

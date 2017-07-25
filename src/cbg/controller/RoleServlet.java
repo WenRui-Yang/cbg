@@ -1,7 +1,9 @@
 package cbg.controller;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +25,21 @@ import cbg.util.StringUtil;
 
 
 public class RoleServlet extends HttpServlet{
+	public static int statck = 0;
 	@Override
 	public void init() throws ServletException {
 		MyThread thread = new MyThread();
 		// 使用另一个线程来执行该方法，会避免占用Tomcat的启动时间
 	    new Thread(thread).start();
 	}
+	
+	 public static void main(String[] args) {
+		 	Calendar cal=Calendar.getInstance();
+	        //System.out.println(Calendar.DATE);//5
+	        cal.add(Calendar.DATE,-14);
+	        java.util.Date time=cal.getTime();
+	        System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(time));
+	  }
 
 }
 class MyThread implements Runnable {
@@ -36,13 +47,19 @@ class MyThread implements Runnable {
 	int norole = 0;
 	int norole2 = 0;
 	int getonhundered = 0; 
+	int pageGlobal = 1;
+	
+	//表示栈的深度，无限递归调用会报错
+	int statckdepth = 0;
 	
 	// Tomcat启动结束后执行
 	@Override
 	public void run() {
 	    // 子线程需要做的事情
 		try {
-			getRole(1);
+			for(;;){
+				getRole(pageGlobal);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -86,9 +103,9 @@ class MyThread implements Runnable {
 				isnext = false;
 			}else{
 				//超过100页 重新请求
-				if(page >= 100){
+				if(pageGlobal >= 100){
 					getonhundered++;
-					page =1;
+					pageGlobal =1;
 				}
 				isnext = true;
 			}
@@ -166,7 +183,7 @@ class MyThread implements Runnable {
 			//commonService.batchSave(list);
 			System.out.println("保存 "+list.size()+" 条信息,当前页:"+page);
 			if(isnext){
-				page++;
+				pageGlobal++;
 				//当连续三次没有获取到新数据 从头获取
 				if(list.size()==0){
 					norole++;
@@ -179,7 +196,7 @@ class MyThread implements Runnable {
 							norole2 = 0;
 							
 							getonhundered=1;
-							page = 1;
+							pageGlobal = 1;
 							
 						}
 						norole = 0;
@@ -195,7 +212,6 @@ class MyThread implements Runnable {
 					e.printStackTrace();
 				}
 				cbgdao.closeConnection();
-				getRole(page);
 			}
 			
 	  } catch (Exception e) {
@@ -205,9 +221,7 @@ class MyThread implements Runnable {
 			} catch (InterruptedException e1) {
 				e1.printStackTrace();
 			}
-			getRole(1);
 	  }
 	}
-
 }
 	

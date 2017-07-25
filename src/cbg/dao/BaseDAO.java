@@ -7,13 +7,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.sql.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import cbg.jdbc.DBConn;
+import cbg.util.DateUtils;
 import cbg.util.StringUtil;
 
 
@@ -244,6 +247,27 @@ public class BaseDAO<T> {
        // conn.closeConn();
     }
     
+    /**
+     * 自动删除14天以前的数据
+     */
+    public void delete14day() throws Exception{
+        String sql = "delete from cbgentity where cbgentity.getTime < ? ";
+        
+        Calendar cal=Calendar.getInstance();
+        //System.out.println(Calendar.DATE);//5
+        cal.add(Calendar.DATE,-14);
+        java.util.Date time=cal.getTime();
+        String date14 = new SimpleDateFormat("yyyy-MM-dd").format(time);
+        
+        PreparedStatement statement = this.connection.prepareStatement(sql);
+        
+        statement.setString(1, date14);
+        
+        //执行
+        conn.execOther(statement);
+        //关闭连接
+       // conn.closeConn();
+    }
     
     /**
      * 通过ID查询

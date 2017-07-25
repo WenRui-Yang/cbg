@@ -59,6 +59,10 @@ function loadKwType(){
             title: '等级',
             sortable : true,
         },  {
+        	field: 'getTime',
+        	title: '获取时间',
+        	sortable : true,
+        },  {
             field: 'expt_total',
             title: '人修总和',
             sortable : true,
