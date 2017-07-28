@@ -1,7 +1,39 @@
 $(window).on('load', function() {
+	getLocation();
     //加载数据
 	loadKwType();
+	
 });
+
+//获取用户地理位置
+function getLocation(){
+	if (navigator.geolocation){
+	  navigator.geolocation.getCurrentPosition(showPosition,showError);
+	 
+	}else{
+		alert("Geolocation is not supported by this browser.");
+	}
+}
+function showError(error){ 
+    switch(error.code) { 
+        case error.PERMISSION_DENIED: 
+            //alert("定位失败,用户拒绝请求地理定位"); 
+            break; 
+        case error.POSITION_UNAVAILABLE: 
+            //alert("定位失败,位置信息是不可用"); 
+            break; 
+        case error.TIMEOUT: 
+            //alert("定位失败,请求获取用户位置超时"); 
+            break; 
+        case error.UNKNOWN_ERROR: 
+            //alert("定位失败,定位系统失效"); 
+            break; 
+    } 
+}
+function showPosition(position){
+	 $("#Latitude").val(position.coords.latitude);
+	 $("#Longitude").val(position.coords.longitude);
+}
 
 function loadKeyword(){
 	$("#kwTb").bootstrapTable("refresh");
@@ -13,14 +45,17 @@ function loadKwType(){
 	 $("#kwTb").bootstrapTable({
     	method: "post",  //使用get请求到服务器获取数据  
     	contentType : "application/x-www-form-urlencoded",
-        url: "servlet/cbgServlet?field=id,nickname,price,xingjiabi,cbgurl,server_name,time_left,expt_total,bb_expt_total,full_life_skill_num,level,getTime", //获取数据的Servlet地址   
+        url: "servlet/cbgServlet?field=id,nickname,price,xingjiabi,cbgurl,server_name,time_left,expt_total,bb_expt_total,full_life_skill_num,level,getTime,all_caiguo,area_name,server_name,cheng_jiu,qian_neng_guo,qian_yuan_dan,school,zhuang_zhi", //获取数据的Servlet地址   
         striped: true,  //表格显示条纹  
         queryParams: function queryParams(params) {   //设置查询参数
         	var queryparam = new Object();
+        	queryparam.latitude = $("#Latitude").val();
+        	queryparam.longitude = $("#Longitude").val();
         	queryparam.level = $("#levelmin").val()+","+$("#levelmax").val();
         	queryparam.price= $("#pricemin").val()+","+$("#pricemax").val();
         	queryparam.expt_total= $("#expt").val()+",150";
         	queryparam. bb_expt_total= $("#bbexpt").val()+",100";
+        	queryparam.school = $("#school");
             var param = {
         		page: params.offset/params.limit+1,
         		rows: params.limit,
@@ -59,6 +94,19 @@ function loadKwType(){
             title: '等级',
             sortable : true,
         },  {
+            field: 'school',
+            title: '门派',
+            sortable : true,
+            formatter:schoolformat
+        },  {
+            field: 'cheng_jiu',
+            title: '成就',
+            sortable : true,
+        },  {
+            field: 'qian_neng_guo',
+            title: '潜能果',
+            sortable : true,
+        },  {
         	field: 'getTime',
         	title: '获取时间',
         	sortable : true,
@@ -74,10 +122,7 @@ function loadKwType(){
             field: 'full_life_skill_num',
             title: '生活技能满个数',
             sortable : true,
-        }, {
-            field: 'bb_expt_total',
-            title: '宝宝修总和',
-            sortable : true,
+            visible: false,
         },{
             field: 'cbgurl',
             title: '链接',
@@ -114,13 +159,17 @@ function loadKwType(){
 		 var div = "<a href='"+row.cbgurl+"' target='_blank' >链接</a>";
 		 return div;
 	 };
+	 function schoolformat(value, row){
+		 var SchoolNameInfo={1:"大唐官府",2:"化生寺",3:"女儿村",4:"方寸山",5:"天宫",6:"普陀山",7:"龙宫",8:"五庄观",9:"狮驼岭",10:"魔王寨",11:"阴曹地府",12:"盘丝洞",13:"神木林",14:"凌波城",15:"无底洞"};function get_school_name(school_id)
+		 {return SchoolNameInfo[row.school];}
+	 }
 	 
 }
 
 
 function getRoleInfo(id){
-	
-	$("#quotesframe").attr("src","servlet/roleDetailServlet?id="+id);
+	var mhb = $("#mhb").val();
+	$("#quotesframe").attr("src","servlet/roleDetailServlet?id="+id+"&mhb="+mhb);
 	$("#addGzTypeModal").modal('show');
 }
 
@@ -130,5 +179,9 @@ function iFrameHeight(){
     var ifm= document.getElementById("quotesframe"); 
     ifm.height=document.documentElement.clientHeight*0.5;
     ifm.width=document.documentElement.clientWidth;
+}
+
+function dashang(){
+	$("#dashangTypeModal").modal('show');
 }
 

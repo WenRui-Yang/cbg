@@ -38,7 +38,9 @@ public class RoleDetailServlet extends HttpServlet{
 				if(c != null){
 					PriceUtil priceUtil = new PriceUtil();
 					if(StringUtil.isNotEmpty(request.getParameter("mhb"))){
-						priceUtil.mhb = Integer.valueOf(request.getParameter("mhb"));
+						if(StringUtil.isNumericString(request.getParameter("mhb"))){
+							priceUtil.mhb = Integer.valueOf(request.getParameter("mhb"));
+						}
 					}
 					int expt = 0;
 					expt += (priceUtil.getxiulian(c.getExpt_fangyu()));
@@ -82,9 +84,14 @@ public class RoleDetailServlet extends HttpServlet{
 					shenghuo += priceUtil.getshenghuo(c.getSkill_lingshi());
 					
 					request.setAttribute("expt", expt);
+					request.setAttribute("exptR", expt*100/priceUtil.mhb);
 					request.setAttribute("bbexpt", bbexpt);
+					request.setAttribute("bbexptR", bbexpt*100/priceUtil.mhb);
 					request.setAttribute("skill", skill);
+					request.setAttribute("skillR", skill*100/priceUtil.mhb);
 					request.setAttribute("shenghuo", shenghuo);
+					request.setAttribute("shenghuoR", shenghuo*100/priceUtil.mhb);
+					request.setAttribute("mhb", priceUtil.mhb);
 				}
 				
 			} catch (Exception e) {

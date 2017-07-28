@@ -16,11 +16,16 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 
+import cbg.dao.BaseDAO;
 import cbg.dao.CbgRoleDao;
+import cbg.dao.UserinfoDao;
 import cbg.entity.CbgEntity;
+import cbg.entity.UserEntity;
 import cbg.util.DataGrid;
+import cbg.util.LocationUtil;
 import cbg.util.SortDirection;
 import cbg.util.StringUtil;
+import cbg.util.SystemUtils;
 import cbg.util.TagUtil;
 
 
@@ -28,6 +33,11 @@ public class CbgServlet extends HttpServlet{
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+		
+		//收集用户信息
+		String latitude = request.getParameter("queryparam[latitude]");
+    	String longitude = request.getParameter("queryparam[longitude]");
+		getuserinfo(request,latitude,longitude);
 		
 		response.setCharacterEncoding("utf-8");
 		DataGrid dg = new DataGrid();
@@ -38,16 +48,16 @@ public class CbgServlet extends HttpServlet{
 		
 		Map<String,	 Object> queryparam = new HashMap<>();
 		String s = request.getParameter("queryparam");
-		if(request.getParameter("queryparam[level]").split(",").length == 2){
+		if(StringUtil.isNotEmpty(request.getParameter("queryparam[level]"))&&request.getParameter("queryparam[level]").split(",").length == 2){
 			queryparam.put("level", request.getParameter("queryparam[level]"));
 		}
-		if(request.getParameter("queryparam[price]").split(",").length == 2){
+		if(StringUtil.isNotEmpty(request.getParameter("queryparam[price]"))&&request.getParameter("queryparam[price]").split(",").length == 2){
 			queryparam.put("price", request.getParameter("queryparam[price]"));
 		}
-		if(request.getParameter("queryparam[expt_total]").split(",").length == 2 && StringUtil.isNotEmpty(request.getParameter("queryparam[expt_total]").split(",")[0])){
+		if(StringUtil.isNotEmpty(request.getParameter("queryparam[expt_total]"))&&request.getParameter("queryparam[expt_total]").split(",").length == 2 && StringUtil.isNotEmpty(request.getParameter("queryparam[expt_total]").split(",")[0])){
 			queryparam.put("expt_total", request.getParameter("queryparam[expt_total]"));
 		}
-		if(request.getParameter("queryparam[bb_expt_total]").split(",").length == 2 && StringUtil.isNotEmpty(request.getParameter("queryparam[bb_expt_total]").split(",")[0]) ){
+		if(StringUtil.isNotEmpty(request.getParameter("queryparam[bb_expt_total]"))&&request.getParameter("queryparam[bb_expt_total]").split(",").length == 2 && StringUtil.isNotEmpty(request.getParameter("queryparam[bb_expt_total]").split(",")[0]) ){
 			queryparam.put("bb_expt_total", request.getParameter("queryparam[bb_expt_total]"));
 		}
 		
@@ -93,6 +103,35 @@ public class CbgServlet extends HttpServlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
+    }
+    
+    public void getuserinfo(HttpServletRequest request, String latitude, String longitude){
+    	SystemUtils s = new SystemUtils();
+    	
+    	String ipAddr = s.getIpAddr(request);
+    	UserEntity u = new UserEntity();
+    	u.setLatitude(latitude);
+    	u.setLongitude(longitude);
+    	
+    	
+    	if(StringUtil.isNotEmpty(latitude) && StringUtil.isNotEmpty(longitude)){
+			String location = LocationUtil.getLocation(longitude,latitude, LocationUtil.THE_WAY);
+			u.setLocation(location);
+    	}
+    	u.setId(CbgRoleDao.getUUID());
+    	u.setBrowser(request.getHeader("User-agent"));
+    	u.setHostName(request.getRemoteHost());
+    	u.setIpAddr(ipAddr);
+    	u.setSystemInfo(s.getRequestSystemInfo(request));
+    	
+    	UserinfoDao userdao = new UserinfoDao();
+    	try {
+    		userdao.save(u);
+    		userdao.closeConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public static void main(String[] args) {

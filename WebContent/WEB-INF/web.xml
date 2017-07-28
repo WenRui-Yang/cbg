@@ -45,6 +45,16 @@
   	<url-pattern>/servlet/roleDetailServlet</url-pattern>
   </servlet-mapping>
   
+    <servlet>
+  	<servlet-name>PayServlet</servlet-name>
+  	<servlet-class>cbg.controller.PayServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>PayServlet</servlet-name>
+  	<url-pattern>/servlet/payServlet</url-pattern>
+  </servlet-mapping>
+  
   	<servlet>
         <servlet-name>ScheduleServlet</servlet-name>
         <servlet-class>cbg.controller.ScheduleServlet</servlet-class>

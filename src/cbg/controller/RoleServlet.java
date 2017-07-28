@@ -49,6 +49,9 @@ class MyThread implements Runnable {
 	int getonhundered = 0; 
 	int pageGlobal = 1;
 	
+	//程序等待时间
+	int threadsleep = 2000;
+	
 	//表示栈的深度，无限递归调用会报错
 	int statckdepth = 0;
 	
@@ -194,7 +197,7 @@ class MyThread implements Runnable {
 						if(getonhundered>0 || norole2 >10){
 							
 							norole2 = 0;
-							
+							threadsleep = 8000;
 							getonhundered=1;
 							pageGlobal = 1;
 							
@@ -207,7 +210,7 @@ class MyThread implements Runnable {
 				}
 				//过2秒再去请求
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(threadsleep);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

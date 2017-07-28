@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>关注欢迎语</title>
+<title>藏宝阁数据分析系统</title>
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
 <link href="${pageContext.request.contextPath}/nifty/css/bootstrap.min.css" rel="stylesheet">
 <link href="${pageContext.request.contextPath}/nifty/css/nifty.min.css" rel="stylesheet">
@@ -35,22 +35,35 @@
 						<div style="padding-top:5px;"></div>
 						
 						<div class="form-group">
+		                    <label class="col-md-3 control-label">当前比例</label>
+		                    <div class="col-md-9"><p class="form-control-static">${mhb}W</p></div>
+		                </div>
+						<div class="form-group">
 		                    <label class="col-md-3 control-label">人修花费</label>
 		                    <div class="col-md-9"><p class="form-control-static">${expt}W</p></div>
+		                    <div class="col-md-9"><p class="form-control-static">${exptR}元</p></div>
 		                </div>
 						<div class="form-group">
 		                    <label class="col-md-3 control-label">宠修花费</label>
 		                    <div class="col-md-9"><p class="form-control-static">${bbexpt}W</p></div>
-		                    <div>全吃修炼果，游戏币按照100块钱1200w，修炼果按照75w一个</div>
+		                    <div class="col-md-9"><p class="form-control-static">${bbexptR}元</p></div>
+		                    <div>全吃修炼果，修炼果按照75w一个</div>
 		                </div>
 						<div class="form-group">
 		                    <label class="col-md-3 control-label">师门技能花费</label>
 		                    <div class="col-md-9"><p class="form-control-static">${skill}W</p></div>
+		                    <div class="col-md-9"><p class="form-control-static">${skillR}元</p></div>
 		                </div>
 						<div class="form-group">
 		                    <label class="col-md-3 control-label">生活技能花费</label>
 		                    <div class="col-md-9"><p class="form-control-static">${shenghuo}W</p></div>
-		                    <div>帮贡按照30元1000点，游戏币按照100块钱1200w</div>
+		                    <div class="col-md-9"><p class="form-control-static">${shenghuoR}元</p></div>
+		                    <div>帮贡按照30元1000点</div>
+		                </div>
+		                <div class="form-group">
+		                    <label class="col-md-3 control-label">总计花费</label>
+		                    <div class="col-md-9"><p class="form-control-static">${shenghuo+expt+bbexpt+skill}W</p></div>
+		                    <div class="col-md-9"><p class="form-control-static">${(shenghuoR+exptR+bbexptR+skillR)}元</p></div>
 		                </div>
 	                </div>
 				</form>

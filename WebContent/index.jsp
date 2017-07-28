@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>关注欢迎语</title>
+<title>藏宝阁数据分析系统</title>
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
 <link href="nifty/css/bootstrap.min.css" rel="stylesheet">
 <link href="nifty/css/nifty.min.css" rel="stylesheet">
@@ -31,39 +31,104 @@
 <body>
 	<!--Page Title-->
 	<div id="page-title">
-		<h1 class="page-header text-overflow">关注欢迎语</h1>
+		<!-- <button class="btn btn-default" onclick="dashang()"></i>支持</button> -->
+		<h1 class="page-header text-overflow">藏宝阁数据分析系统</h1>
 	</div>
 	<!--End page title-->
 
 	<!--Breadcrumb-->
 	<ol class="breadcrumb">
-		<li><a href="#">首页</a></li>
-		<li>基础设置</li>
-		<li class="active">未识别回复语</li>
+		<li><a href="#">测试版V1.0</a></li>
+		<li>功能不完善之处欢迎指正</li>
+		<li class="active">QQ群17446982</li>
+		<div>
+        <p class="pad-lft">&#0169; 2017@本系统仅供学习，参考，交流使用，如有侵权，请及时联系我@；记得备注噢</p>
+        </div>
 	</ol>
 	<!--End breadcrumb-->
 
 	<!--Page content-->
 	<div id="page-content">
 			
+			<input id="Latitude" type="hidden" >
+			<input id="Longitude" type="hidden" >
 		<div class="panel">
-			<div id="searchDiv" style="padding: 10px 0 0 10px;">
+			<div  style="padding: 10px 0 0 10px;">
+				游戏币比例:<input type="text" style="padding-bottom:6px;" id="mhb" value="1200"/>
+			</div>
+			<!-- <div id="searchDiv" style="padding: 10px 0 0 10px;">
 				等级:<input type="text" style="padding-bottom:6px;" id="levelmin" />至
 					<input type="text" style="padding-bottom:6px;" id="levelmax" />
 				价格:<input type="text" style="padding-bottom:6px;" id="pricemin" />至
 					<input type="text" style="padding-bottom:6px;" id="pricemax" />
 				人修总和:<input type="text" style="padding-bottom:6px;" id="expt" />
 				宠修总和:<input type="text" style="padding-bottom:6px;" id="bbexpt" />
+				
 				<button class="btn btn-mint" onclick="loadKeyword();"><i class="ion-search"></i> 查询</button>
-			</div>
+			</div> -->
+			 <div class="panel-body">
+		            <div class="form-group">
+						<label class="col-sm-3 control-label">等级：</label>
+						<div class="col-sm-2" >
+							<input class="form-control" name="levelmin" id="levelmin" placeholder="最低等级"></input>
+						</div>
+						<div class="col-sm-2" >
+							<input class="form-control" name="levelmax" id="levelmax" placeholder="最高等级"></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label">价格：</label>
+						<div class="col-sm-2" >
+							<input class="form-control" name="pricemin" id="pricemin" placeholder="最低价格"></input>
+						</div>
+						<div class="col-sm-2" >
+							<input class="form-control" name="pricemax" id="pricemax" placeholder="最高价格"></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label">人物修炼：</label>
+						<div class="col-sm-2" >
+							<input class="form-control" name="expt" id="expt" placeholder="人物修炼"></input>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label">宠物修炼：</label>
+						<div class="col-sm-2" >
+							<input class="form-control" name="bbexpt" id="bbexpt" placeholder="宠物修炼"></input>
+						</div>
+					</div>
+		            <div class="form-group">
+		                <label  class="col-sm-3 control-label">门派</label>
+		                <select class="selectpicker" id="school">
+	 						<option value="">请选择门派</option>
+							<option value="1">大唐</option>
+							<option value="2">化生</option>
+							<option value="3">女儿</option>
+							<option value="4">方寸</option>
+							<option value="5">天宫</option>
+							<option value="6">普陀</option>
+							<option value="7">龙宫</option>
+							<option value="8">五庄</option>
+							<option value="9">狮驼</option>
+							<option value="10">魔王</option>
+							<option value="11">地府</option>
+							<option value="12">盘丝</option>
+							<option value="13">神木</option>
+							<option value="14">凌波</option>
+							<option value="15">无底洞</option>
+						</select>
+		            </div>
+		            <button class="btn btn-default" onclick="loadKeyword()"><i class="ion-search"></i>搜索</button>
+		        </div>
 			<div id="dicToolbar" class="table-toolbar-left">
 				<div style="float:left;margin-left:10px;">
 					<button onclick="searchReset();" class="btn btn-mint"><i class="ion-loop"></i> 重置</button>
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 				</div>
 			</div>
+			</div>
+		<div class="panel">
 			<div class="panel-body">
-				
 				<table class="demo-add-niftycheck" id="kwTb">
 				</table>
 			</div>
@@ -108,6 +173,32 @@
     </div>
     <!--addDicTypeModal-->
     
+    
+    <!--addGzTypeModal-->
+    <div class="modal fade" id="dashangTypeModal" role="dialog" tabindex="-1" aria-labelledby="addDicModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!--Modal header-->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><i class="pci-cross pci-circle"></i></button>
+                    <h4 class="modal-title">感觉不错支持一下</h4>
+                </div>
+                <!--Modal body-->
+                <form id="addGzTypeForm" method="post" class="form-horizontal">
+                	<div class="modal-body">
+                		<div class="form-group">
+                			<img src="/i/eg_chinarose.jpg" />
+						</div>
+	                </div>
+	                <!--Modal footer-->
+	                <div class="modal-footer">
+	                    <button data-dismiss="modal" class="btn btn-default" type="button">确定</button>
+	                </div>
+				</form>
+            </div>
+        </div>
+    </div>
+    <!--addDicTypeModal-->
     
     <style>
 	.loadEffect{

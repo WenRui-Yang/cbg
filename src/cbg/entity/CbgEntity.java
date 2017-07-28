@@ -1,5 +1,6 @@
 package cbg.entity;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class CbgEntity{
@@ -8,7 +9,7 @@ public class CbgEntity{
 
 	
 	//获取时间
-	private Date getTime;
+	private Timestamp getTime;
 	
 	//CBGurl
 	private String cbgurl;
@@ -1279,12 +1280,6 @@ public class CbgEntity{
 		public void setZhuang_zhi(Integer zhuang_zhi) {
 			this.zhuang_zhi = zhuang_zhi;
 		}
-		public Date getGetTime() {
-			return getTime;
-		}
-		public void setGetTime(Date getTime) {
-			this.getTime = getTime;
-		}
 		public int getXingjiabi() {
 			return xingjiabi;
 		}
@@ -1304,5 +1299,11 @@ public class CbgEntity{
 
 		public void setId(String id) {
 			this.id = id;
+		}
+		public Timestamp getGetTime() {
+			return getTime;
+		}
+		public void setGetTime(Timestamp getTime) {
+			this.getTime = getTime;
 		}
 }

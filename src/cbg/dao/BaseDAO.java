@@ -6,6 +6,7 @@ import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,8 +55,10 @@ public class BaseDAO<T> {
      * 保存
      */
     public void save(T entity) throws Exception{
+    	//StringBuffer sql = new StringBuffer();
         //SQL语句,insert into table name (
         String sql = "insert into " + entity.getClass().getSimpleName().toLowerCase() + "(";
+    	//sql.append("insert into ").append(entity.getClass().getSimpleName().toLowerCase()).append("(");
         
         //获得带有字符串get的所有方法的对象
         List<Method> list = this.matchPojoMethods(entity,"get");
@@ -330,6 +333,8 @@ public class BaseDAO<T> {
                     this.setDate(method, entity, rs.getDate(method.getName().substring(3).toLowerCase()));
                 } else if(method.getParameterTypes()[0].getSimpleName().indexOf("InputStream") != -1) {
                     this.setBlob(method, entity, rs.getBlob(method.getName().substring(3).toLowerCase()).getBinaryStream());
+                } else if(method.getParameterTypes()[0].getSimpleName().indexOf("Timestamp") != -1){
+                    this.setTimestamp(method, entity, rs.getTimestamp(method.getName().substring(3).toLowerCase()));
                 } else if(method.getParameterTypes()[0].getSimpleName().indexOf("Long") != -1){
                 	if(rs.getObject(method.getName().substring(3).toLowerCase()) == null){
                 		this.setNull(method, entity, null);
@@ -426,6 +431,8 @@ public class BaseDAO<T> {
                     this.setString(method, entity, rs.getString(method.getName().substring(3).toLowerCase()));
                 } else if(method.getParameterTypes()[0].getSimpleName().indexOf("Date") != -1){
                     this.setDate(method, entity, rs.getDate(method.getName().substring(3).toLowerCase()));
+                } else if(method.getParameterTypes()[0].getSimpleName().indexOf("Timestamp") != -1){
+                    this.setTimestamp(method, entity, rs.getTimestamp(method.getName().substring(3).toLowerCase()));
                 } else if(method.getParameterTypes()[0].getSimpleName().indexOf("InputStream") != -1) {
                     this.setBlob(method, entity, rs.getBlob(method.getName().substring(3).toLowerCase()).getBinaryStream());
                 } else if(method.getParameterTypes()[0].getSimpleName().indexOf("Long") != -1){
@@ -553,7 +560,8 @@ public class BaseDAO<T> {
      * @throws Exception
      */
     public List findListByParam(Map<String,Object> param,String sort,String order,int page,int rows) throws Exception{
-        String sql = "select * from " + persistentClass.getSimpleName().toLowerCase() + " where 1=1 ";
+    	StringBuffer sql = new StringBuffer();
+    	sql.append("select * from ").append(persistentClass.getSimpleName().toLowerCase()).append(" where 1=1 ");
         
         //通过子类的构造函数,获得参数化类型的具体类型.比如BaseDAO<T>也就是获得T的具体类型
         T entity = persistentClass.newInstance();
@@ -580,12 +588,15 @@ public class BaseDAO<T> {
             			 Object object = param.get(tempName);
             			 if(object instanceof String){
             				 if((((String) object).contains(","))){
-            					 sql += " and " +tempName + " >= ? "+" and "+tempName + " <= ? ";
+            					 //sql += " and " +tempName + " >= ? "+" and "+tempName + " <= ? ";
+            					 sql.append(" and ").append(tempName).append(" >= ? and ").append(tempName).append(" <= ? ");
             				 }else{
-            					 sql += " and "+ tempName + " = ? ";
+            					 //sql += " and "+ tempName + " = ? ";
+            					 sql.append(" and ").append(tempName).append(" = ? ");
             				 }
             			 }else{
-            				 sql += " and "+ tempName + " = ? ";
+            				 //sql += " and "+ tempName + " = ? ";
+            				 sql.append(" and ").append(tempName).append(" = ? ");
             			 }
                          
                          paramList.add(tempName);
@@ -596,20 +607,23 @@ public class BaseDAO<T> {
         
         if(StringUtil.isNotEmpty(sort) && StringUtil.isNotEmpty(order)){
         	if(sort.equals("price")){
-        		sql+=" order by LENGTH(price) "+order+" ,price " +order;
+        		//sql+=" order by LENGTH(price) "+order+" ,price " +order;
+        		sql.append(" order by LENGTH(price) ").append(order).append(" ,price ").append(order);
         	}else{
-        		sql+=" order by "+ sort +" "+order;
+        		//sql+=" order by "+ sort +" "+order;
+        		sql.append(" order by ").append(sort).append(" ").append(order);
         	}
         }
         
         if(StringUtil.isNotEmpty(page) && StringUtil.isNotEmpty(rows)){
-        	sql+=" limit "+(page-1)*rows + ","+rows;
+        	//sql+=" limit "+(page-1)*rows + ","+rows;
+        	sql.append(" limit ").append((page-1)*rows).append(",").append(rows);
         }
         //封装语句完毕,打印sql语句
         //System.out.println(sql);
         
         //获得连接
-        PreparedStatement statement = this.connection.prepareStatement(sql);
+        PreparedStatement statement = this.connection.prepareStatement(String.valueOf(sql));
         
         int j = 0;
         Object object =null;
@@ -657,6 +671,8 @@ public class BaseDAO<T> {
                     this.setString(method, entity, rs.getString(method.getName().substring(3).toLowerCase()));
                 } else if(method.getParameterTypes()[0].getSimpleName().indexOf("Date") != -1){
                     this.setDate(method, entity, rs.getDate(method.getName().substring(3).toLowerCase()));
+                } else if(method.getParameterTypes()[0].getSimpleName().indexOf("Timestamp") != -1){
+                    this.setTimestamp(method, entity, rs.getTimestamp(method.getName().substring(3).toLowerCase()));
                 } else if(method.getParameterTypes()[0].getSimpleName().indexOf("InputStream") != -1) {
                     this.setBlob(method, entity, rs.getBlob(method.getName().substring(3).toLowerCase()).getBinaryStream());
                 } else if(method.getParameterTypes()[0].getSimpleName().indexOf("Long") != -1){
@@ -685,7 +701,10 @@ public class BaseDAO<T> {
         return returnlist;
     }
     
-    /**
+    
+
+
+	/**
      * 过滤当前Pojo类所有带传入字符串的Method对象,返回List集合.
      */
     private List<Method> matchPojoMethods(T entity,String methodName) {
@@ -782,4 +801,9 @@ public class BaseDAO<T> {
     public Date setDate(Method method, T entity, Date arg) throws Exception{
         return (Date)method.invoke(entity, new Object[]{arg});
     }
+    
+    private Timestamp setTimestamp(Method method, T entity, Timestamp timestamp) throws Exception {
+		// TODO Auto-generated method stub
+    	return (Timestamp)method.invoke(entity, new Object[]{timestamp});
+	}
 }
