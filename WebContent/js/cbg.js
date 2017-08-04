@@ -5,6 +5,39 @@ $(window).on('load', function() {
 	
 });
 
+//截取url参数
+function getUrlParam(name,cbgurl) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = cbgurl.substr(1).match(reg);
+    if (r != null)
+    	return unescape(r[2]); 
+    return null;
+}
+
+function oneRole(){
+	var cbgurl = $("#onerole").val();
+	
+	var serverid = getUrlParam("serverid",cbgurl);
+	if(serverid == null){
+		serverid = getUrlParam("server_id",cbgurl);
+		if(serverid == null){
+			bootbox.alert('无效的地址！');
+			return;
+		}
+	}
+	var ordersn = getUrlParam("ordersn",cbgurl);
+	if(ordersn == null){
+		bootbox.alert('无效的地址！');
+		return;
+	}
+	
+	var mhb = $("#mhb").val();
+	$("#quotesframe").attr("src","servlet/roleDetailServlet?mhb="+mhb+"&serverid="+serverid+"&ordersn="+ordersn);
+	$("#addGzTypeModal").modal('show');
+	
+	
+}
+
 //获取用户地理位置
 function getLocation(){
 	if (navigator.geolocation){
@@ -45,7 +78,7 @@ function loadKwType(){
 	 $("#kwTb").bootstrapTable({
     	method: "post",  //使用get请求到服务器获取数据  
     	contentType : "application/x-www-form-urlencoded",
-        url: "servlet/cbgServlet?field=id,nickname,price,xingjiabi,cbgurl,server_name,time_left,expt_total,bb_expt_total,full_life_skill_num,level,getTime,all_caiguo,area_name,server_name,cheng_jiu,qian_neng_guo,qian_yuan_dan,school,zhuang_zhi", //获取数据的Servlet地址   
+        url: "servlet/cbgServlet?field=id,nickname,price,xingjiabi,cbgurl,server_name,time_left,expt_total,bb_expt_total,full_life_skill_num,level,getTime,all_caiguo,area_name,server_name,cheng_jiu,qian_neng_guo,qian_yuan_dan,school,zhuang_zhi,bb_expt_fangyu,bb_expt_fashu,bb_expt_gongji,bb_expt_kangfa,expt_fashu,expt_fashu,expt_gongji,expt_kangfa,expt_lieshu", //获取数据的Servlet地址   
         striped: true,  //表格显示条纹  
         queryParams: function queryParams(params) {   //设置查询参数
         	var queryparam = new Object();
@@ -55,7 +88,8 @@ function loadKwType(){
         	queryparam.price= $("#pricemin").val()+","+$("#pricemax").val();
         	queryparam.expt_total= $("#expt").val()+",150";
         	queryparam. bb_expt_total= $("#bbexpt").val()+",100";
-        	queryparam.school = $("#school");
+        	queryparam.school = $("#school").val();
+        	queryparam.zhuanzhi = $("#zhuanzhi").val();
             var param = {
         		page: params.offset/params.limit+1,
         		rows: params.limit,
@@ -68,8 +102,8 @@ function loadKwType(){
         pagination: true, //启动分页  
         pageSize: 10,  //每页显示的记录数  
         pageNumber:1, //当前第几页  
-        pageList: [5, 10, 15, 20, 25],  //记录数可选列表  
-        search: true,  //是否启用查询  
+        pageList: [10, 20, 50, 100],  //记录数可选列表  
+        search: false,  //是否启用查询  
         sortable: true,                     //是否启用排序
         showColumns: true,  //显示下拉框勾选要显示的列  
         showRefresh: true,  //显示刷新按钮  
@@ -98,6 +132,10 @@ function loadKwType(){
             title: '门派',
             sortable : true,
             formatter:schoolformat
+        },{
+        	field: 'zhuang_zhi',
+        	title: '转职',
+        	formatter: zhuanzhiformat,
         },  {
             field: 'cheng_jiu',
             title: '成就',
@@ -112,15 +150,17 @@ function loadKwType(){
         	sortable : true,
         },  {
             field: 'expt_total',
-            title: '人修总和',
+            title: '人修',
+            formatter: exptformatter,
             sortable : true,
         },  {
             field: 'bb_expt_total',
-            title: '宝宝修总和',
+            title: '宠修',
+            formatter: bbexptformatter,
             sortable : true,
         }, {
             field: 'full_life_skill_num',
-            title: '生活技能满个数',
+            title: '生活技能满',
             sortable : true,
             visible: false,
         },{
@@ -132,6 +172,10 @@ function loadKwType(){
         	title: '昵称',
         	align: 'center',
         	sortable : true,
+        },{
+        	title: '区服',
+        	formatter: serverformat,
+        	visible: false,
         },{
         	title: '操作',
         	formatter: operateFormatter,
@@ -156,12 +200,29 @@ function loadKwType(){
 		 return div;
 	 };
 	 function urlformat(value, row) {
-		 var div = "<a href='"+row.cbgurl+"' target='_blank' >链接</a>";
+		 var div = "<a href='"+row.cbgurl+"' target='_blank' style='color:blue'>链接</a>";
 		 return div;
 	 };
 	 function schoolformat(value, row){
-		 var SchoolNameInfo={1:"大唐官府",2:"化生寺",3:"女儿村",4:"方寸山",5:"天宫",6:"普陀山",7:"龙宫",8:"五庄观",9:"狮驼岭",10:"魔王寨",11:"阴曹地府",12:"盘丝洞",13:"神木林",14:"凌波城",15:"无底洞"};function get_school_name(school_id)
-		 {return SchoolNameInfo[row.school];}
+		 var SchoolNameInfo={1:"大唐官府",2:"化生寺",3:"女儿村",4:"方寸山",5:"天宫",6:"普陀山",7:"龙宫",8:"五庄观",9:"狮驼岭",10:"魔王寨",11:"阴曹地府",12:"盘丝洞",13:"神木林",14:"凌波城",15:"无底洞"};
+		 return SchoolNameInfo[row.school];
+	 }
+	 function serverformat(value, row){
+		 return row.area_name +" "+row.server_name;
+	 }
+	 function zhuanzhiformat(value, row){
+		 var ZhuanzhiInfo={0:"未飞升",1:"已飞升",2:"已渡劫"};
+		 if(row.zhuang_zhi >=10){
+			 return "化圣"+row.zhuang_zhi/10;
+		 }else{
+			 return ZhuanzhiInfo[row.zhuang_zhi];
+		 }
+	 }
+	 function bbexptformatter(value, row){
+		 return row.bb_expt_gongji +","+row.bb_expt_fangyu +","+row.bb_expt_fashu +","+row.bb_expt_kangfa+","+row.bb_expt_total;
+	 }
+	 function exptformatter(value, row){
+		 return row.expt_gongji +","+row.expt_fangyu +","+row.expt_fashu +","+row.expt_kangfa+",猎"+row.expt_lieshu +","+row.expt_total;
 	 }
 	 
 }

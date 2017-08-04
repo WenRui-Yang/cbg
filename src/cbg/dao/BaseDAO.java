@@ -465,8 +465,8 @@ public class BaseDAO<T> {
     /**
      * 统计数量
      */
-    public int countByParam(Map<String,Object> param) throws Exception{
-        String sql = "select count(*) from " + persistentClass.getSimpleName().toLowerCase() + " where 1=1 ";
+    public int countByParam(Map<String,Object> param,String countfiled) throws Exception{
+        String sql = "select count("+countfiled+") from " + persistentClass.getSimpleName().toLowerCase() + " where 1=1 ";
         
         //通过子类的构造函数,获得参数化类型的具体类型.比如BaseDAO<T>也就是获得T的具体类型
         T entity = persistentClass.newInstance();

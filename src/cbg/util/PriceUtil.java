@@ -13,7 +13,7 @@ public class PriceUtil {
 	public int value(CbgEntity c){
 		int value=0;
 		//行囊扩展数目
-		value += (c.getBaggage_extend_num())*100*mhb;
+		//value += (c.getBaggage_extend_num())*100*mhb;
 		//现金+储备
 		value +=((c.getCash()+c.getLearn_cash()/2)/10000);
 		//修炼计算

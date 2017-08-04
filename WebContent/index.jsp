@@ -31,31 +31,56 @@
 <body>
 	<!--Page Title-->
 	<div id="page-title">
-		<!-- <button class="btn btn-default" onclick="dashang()"></i>支持</button> -->
+		<button class="btn btn-default" onclick="dashang()"></i>支持</button>
+		
 		<h1 class="page-header text-overflow">藏宝阁数据分析系统</h1>
+		<div style="display:table-cell;vertical-align:middle;text-align:center;">
+				<p >微信扫一扫关注公众号</p>
+       			<img width="150px;" height="150px;" style="text-align:middle;" src="img/erweima.jpg" alt="二维码">
+		</div>
 	</div>
 	<!--End page title-->
 
 	<!--Breadcrumb-->
 	<ol class="breadcrumb">
-		<li><a href="#">测试版V1.0</a></li>
+		<li><a href="#">测试版V1.1</a></li>
+		<li class="active">关注公众号享自动推送功能</li>
 		<li>功能不完善之处欢迎指正</li>
-		<li class="active">QQ群17446982</li>
+		<li>QQ群</li>
+		<li class="active">17446982</li>
+		<li>，加群享更多功能</li>
+		<li>，系统只保留最近14天以内的数据，超时的将会删除</li>
 		<div>
-        <p class="pad-lft">&#0169; 2017@本系统仅供学习，参考，交流使用，如有侵权，请及时联系我@；记得备注噢</p>
+        <li>2017@本系统仅供学习，参考，交流使用，如有侵权，请及时联系我，贴吧@1217007411</li>
         </div>
 	</ol>
 	<!--End breadcrumb-->
+	
+	
 
 	<!--Page content-->
 	<div id="page-content">
+		<div class="panel">
+			<div class="panel-body">
+				<div class="form-group">
+						<label class="col-sm-3 control-label">游戏币比例:</label>
+						<div class="col-sm-2" >
+							<input type="text" style="padding-bottom:6px;" id="mhb" value="1200"/>
+						</div>
+				</div>
+				<div class="form-group">
+						<label class="col-sm-3 control-label">在线估价</label>
+						<div class="col-sm-2" >
+							<input class="form-control" name="onerole" id="onerole" placeholder="拷贝藏宝阁链接估价"></input>
+						 	<button class="btn btn-default" onclick="oneRole()" id="onerolehref"><i class="ion-search"></i>估价</button>
+						</div>
+				</div>
+			</div>
+		</div>
 			
 			<input id="Latitude" type="hidden" >
 			<input id="Longitude" type="hidden" >
 		<div class="panel">
-			<div  style="padding: 10px 0 0 10px;">
-				游戏币比例:<input type="text" style="padding-bottom:6px;" id="mhb" value="1200"/>
-			</div>
 			<!-- <div id="searchDiv" style="padding: 10px 0 0 10px;">
 				等级:<input type="text" style="padding-bottom:6px;" id="levelmin" />至
 					<input type="text" style="padding-bottom:6px;" id="levelmax" />
@@ -66,39 +91,36 @@
 				
 				<button class="btn btn-mint" onclick="loadKeyword();"><i class="ion-search"></i> 查询</button>
 			</div> -->
+			
 			 <div class="panel-body">
+				 <div class="form-inline">
 		            <div class="form-group">
-						<label class="col-sm-3 control-label">等级：</label>
+						<label class="col-sm-3 control-label">等级</label>
 						<div class="col-sm-2" >
 							<input class="form-control" name="levelmin" id="levelmin" placeholder="最低等级"></input>
-						</div>
-						<div class="col-sm-2" >
 							<input class="form-control" name="levelmax" id="levelmax" placeholder="最高等级"></input>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">价格：</label>
+						<label class="col-sm-3 control-label">价格</label>
 						<div class="col-sm-2" >
 							<input class="form-control" name="pricemin" id="pricemin" placeholder="最低价格"></input>
-						</div>
-						<div class="col-sm-2" >
 							<input class="form-control" name="pricemax" id="pricemax" placeholder="最高价格"></input>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">人物修炼：</label>
+						<label class="col-sm-3 control-label">人修总和</label>
 						<div class="col-sm-2" >
-							<input class="form-control" name="expt" id="expt" placeholder="人物修炼"></input>
+							<input class="form-control" name="expt" id="expt" placeholder="人修总和"></input>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="col-sm-3 control-label">宠物修炼：</label>
+						<label class="col-sm-3 control-label">宠修总和</label>
 						<div class="col-sm-2" >
-							<input class="form-control" name="bbexpt" id="bbexpt" placeholder="宠物修炼"></input>
+							<input class="form-control" name="bbexpt" id="bbexpt" placeholder="宠修总和"></input>
 						</div>
 					</div>
 		            <div class="form-group">
-		                <label  class="col-sm-3 control-label">门派</label>
 		                <select class="selectpicker" id="school">
 	 						<option value="">请选择门派</option>
 							<option value="1">大唐</option>
@@ -118,15 +140,33 @@
 							<option value="15">无底洞</option>
 						</select>
 		            </div>
+		            <div class="form-group">
+		                <select class="selectpicker" id="zhuanzhi">
+	 						<option value="">请选择转职</option>
+							<option value="0">未飞升</option>
+							<option value="1">已飞升</option>
+							<option value="2">已渡劫</option>
+							<option value="10">化圣1</option>
+							<option value="20">化圣2</option>
+							<option value="30">化圣3</option>
+							<option value="40">化圣4</option>
+							<option value="50">化圣5</option>
+							<option value="60">化圣6</option>
+							<option value="70">化圣7</option>
+							<option value="80">化圣8</option>
+							<option value="90">化圣9</option>
+						</select>
+		            </div>
 		            <button class="btn btn-default" onclick="loadKeyword()"><i class="ion-search"></i>搜索</button>
 		        </div>
-			<div id="dicToolbar" class="table-toolbar-left">
-				<div style="float:left;margin-left:10px;">
-					<button onclick="searchReset();" class="btn btn-mint"><i class="ion-loop"></i> 重置</button>
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<div id="dicToolbar" class="table-toolbar-left">
+					<div style="float:left;margin-left:10px;">
+						<button onclick="searchReset();" class="btn btn-mint"><i class="ion-loop"></i> 重置</button>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					</div>
 				</div>
 			</div>
-			</div>
+		</div>
 		<div class="panel">
 			<div class="panel-body">
 				<table class="demo-add-niftycheck" id="kwTb">
@@ -180,14 +220,16 @@
             <div class="modal-content">
                 <!--Modal header-->
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><i class="pci-cross pci-circle"></i></button>
-                    <h4 class="modal-title">感觉不错支持一下</h4>
+                    <h4 class="modal-title">赞助</h4>
                 </div>
                 <!--Modal body-->
                 <form id="addGzTypeForm" method="post" class="form-horizontal">
                 	<div class="modal-body">
-                		<div class="form-group">
-                			<img src="/i/eg_chinarose.jpg" />
+                		<div><li>本站不涉及任何政治/商业,只强调技术研究与讨论!</li></div>
+                		<div><li>共同学习 互相帮助 思维突破 追求纯粹 希望有能力的同学能赞助一下 让我们一起走的更远</li></div>
+                		<div><li>您的赞助会让我们更好的发展,所有费用均用于服务器续费以及站点开支等...</li></div>
+                		<div style="display:table-cell;vertical-align:middle;text-align:center;">
+                			<img src="img/alipay.png" width="280px;" height="330px;" style="text-align:middle;" />
 						</div>
 	                </div>
 	                <!--Modal footer-->

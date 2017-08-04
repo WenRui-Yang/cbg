@@ -1,5 +1,7 @@
 package cbg.controller;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,6 +15,14 @@ import javax.servlet.http.HttpServlet;
 
 import org.json.JSONException;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomElement;
+import com.gargoylesoftware.htmlunit.html.HtmlDivision;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlInput;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -226,5 +236,45 @@ class MyThread implements Runnable {
 			}
 	  }
 	}
+  
+  
+  public static void getPet(int page) throws Exception{
+		String getUrl = "http://xyq.cbg.163.com/cgi-bin/equipquery.py?act=overall_search_show_detail&serverid=681&ordersn=1217_1499823433_1218545911&equip_refer=1&from=singlemessage&isappinstalled=0#collect_panel";
+		
+		String str;
+        //使用FireFox读取网页
+        WebClient webClient = new WebClient(BrowserVersion.FIREFOX_24);
+        //htmlunit 对css和javascript的支持不好，所以请关闭之
+        //webClient.getOptions().setJavaScriptEnabled(false);
+        webClient.getOptions().setJavaScriptEnabled(true);  //需要解析js  
+        webClient.getOptions().setThrowExceptionOnScriptError(false);  //解析js出错时不抛异常  
+        webClient.getOptions().setCssEnabled(false);
+        
+        HtmlPage pageContent = null;
+        
+        webClient.waitForBackgroundJavaScript(20000);   //等侍js脚本执行完成  
+        
+		pageContent = webClient.getPage(getUrl);
+		
+		HtmlElement dom = (HtmlElement) pageContent.getElementById("role_pets");
+		
+		HtmlPage tempPage = null;
+		
+		webClient.waitForBackgroundJavaScript(500);
+		tempPage = dom.click();
+		
+		
+		//DomElement div=pageContent.getElementById("pet_detail_templ");
+        System.out.println(tempPage.asXml());  
+				
+	}
+  
+  public static void main(String[] args) {
+	  try {
+		getPet(1);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+  }
 }
 	

@@ -60,10 +60,23 @@ public class CbgServlet extends HttpServlet{
 		if(StringUtil.isNotEmpty(request.getParameter("queryparam[bb_expt_total]"))&&request.getParameter("queryparam[bb_expt_total]").split(",").length == 2 && StringUtil.isNotEmpty(request.getParameter("queryparam[bb_expt_total]").split(",")[0]) ){
 			queryparam.put("bb_expt_total", request.getParameter("queryparam[bb_expt_total]"));
 		}
+		if(StringUtil.isNotEmpty(request.getParameter("queryparam[school]")) && StringUtil.isNumeric(request.getParameter("queryparam[school]"))){
+			queryparam.put("school", request.getParameter("queryparam[school]"));
+		}
+		if(StringUtil.isNotEmpty(request.getParameter("queryparam[zhuanzhi]")) &&StringUtil.isNumeric(request.getParameter("queryparam[zhuanzhi]"))){
+			queryparam.put("zhuang_zhi", request.getParameter("queryparam[zhuanzhi]"));
+		}
 		
 		String sort = request.getParameter("sort");
-		dg.setSort(sort);
 		String order = request.getParameter("order");
+		if(StringUtil.isEmpty(sort)){
+			dg.setSort("getTime");
+			sort = "getTime";
+			order = "desc";
+		}else{
+			dg.setSort(sort);
+		}
+		
 		if(StringUtil.isNotEmpty(order)){
 			if(order.equals("asc")){
 				dg.setOrder(SortDirection.asc);
@@ -84,7 +97,8 @@ public class CbgServlet extends HttpServlet{
 		try {
 			list = cbgdao.findListByParam(queryparam,sort,order,page,rows);
 			dg.setResults(list);
-			dg.setTotal(cbgdao.countByParam(queryparam));
+			//level建立了索引 根据这个能快一些
+			dg.setTotal(cbgdao.countByParam(queryparam,"level"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -4,10 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
+
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 public class HttpRequest {
     /**
@@ -27,11 +30,14 @@ public class HttpRequest {
             URL realUrl = new URL(urlNameString);
             // 打开和URL之间的连接
             URLConnection connection = realUrl.openConnection();
+            
             // 设置通用的请求属性
             connection.setRequestProperty("accept", "*/*");
             connection.setRequestProperty("connection", "Keep-Alive");
             connection.setRequestProperty("user-agent",
                     "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+            connection.setRequestProperty("Accept-Charset", "UTF-8");
+            connection.setRequestProperty("contentType", "UTF-8");
             // 建立实际的连接
             connection.connect();
             // 获取所有响应头字段
@@ -41,8 +47,9 @@ public class HttpRequest {
                 //System.out.println(key + "--->" + map.get(key));
             }
             // 定义 BufferedReader输入流来读取URL的响应
-            in = new BufferedReader(new InputStreamReader(
-                    connection.getInputStream()));
+            InputStreamReader isr = new InputStreamReader(connection.getInputStream(),"GBK");
+            
+            in = new BufferedReader(isr);
             String line;
             while ((line = in.readLine()) != null) {
                 result += line;
