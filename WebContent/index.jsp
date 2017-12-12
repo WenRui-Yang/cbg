@@ -120,6 +120,13 @@
 							<input class="form-control" name="bbexpt" id="bbexpt" placeholder="宠修总和"></input>
 						</div>
 					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label">角色获取时间</label>
+						<div class="col-sm-2" >
+							<input class="form-control" name="starttime" id="starttime" placeholder="开始时间"></input>
+							<input class="form-control" name="endtime" id="endtime" placeholder="结束时间"></input>
+						</div>
+					</div>
 		            <div class="form-group">
 		                <select class="selectpicker" id="school">
 	 						<option value="">请选择门派</option>

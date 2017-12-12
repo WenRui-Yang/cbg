@@ -78,7 +78,7 @@ function loadKwType(){
 	 $("#kwTb").bootstrapTable({
     	method: "post",  //使用get请求到服务器获取数据  
     	contentType : "application/x-www-form-urlencoded",
-        url: "servlet/cbgServlet?field=id,nickname,price,xingjiabi,cbgurl,server_name,time_left,expt_total,bb_expt_total,full_life_skill_num,level,getTime,all_caiguo,area_name,server_name,cheng_jiu,qian_neng_guo,qian_yuan_dan,school,zhuang_zhi,bb_expt_fangyu,bb_expt_fashu,bb_expt_gongji,bb_expt_kangfa,expt_fashu,expt_fashu,expt_gongji,expt_kangfa,expt_lieshu", //获取数据的Servlet地址   
+        url: "servlet/cbgServlet?field=id,nickname,price,xingjiabi,cbgurl,time_left,expt_total,bb_expt_total,full_life_skill_num,level,getTime,all_caiguo,area_name,server_name,cheng_jiu,qian_neng_guo,qian_yuan_dan,school,zhuang_zhi,bb_expt_fangyu,bb_expt_fashu,bb_expt_gongji,bb_expt_kangfa,expt_fangyu,expt_fashu,expt_gongji,expt_kangfa,expt_lieshu", //获取数据的Servlet地址   
         striped: true,  //表格显示条纹  
         queryParams: function queryParams(params) {   //设置查询参数
         	var queryparam = new Object();
@@ -86,6 +86,7 @@ function loadKwType(){
         	queryparam.longitude = $("#Longitude").val();
         	queryparam.level = $("#levelmin").val()+","+$("#levelmax").val();
         	queryparam.price= $("#pricemin").val()+","+$("#pricemax").val();
+        	queryparam.getTime= $("#starttime").val()+","+$("#endtime").val();
         	queryparam.expt_total= $("#expt").val()+",150";
         	queryparam. bb_expt_total= $("#bbexpt").val()+",100";
         	queryparam.school = $("#school").val();
@@ -136,27 +137,55 @@ function loadKwType(){
         	field: 'zhuang_zhi',
         	title: '转职',
         	formatter: zhuanzhiformat,
-        },  {
+        }/*,  {
             field: 'cheng_jiu',
             title: '成就',
             sortable : true,
         },  {
-            field: 'qian_neng_guo',
+            field: 'qian_neng_guo',          row.bb_expt_gongji +","+row.bb_expt_fangyu +","+row.bb_expt_fashu +","+row.bb_expt_kangfa+","+row.bb_expt_total;
             title: '潜能果',
             sortable : true,
-        },  {
-        	field: 'getTime',
-        	title: '获取时间',
+        }*/,  {
+        	field: 'expt_gongji',
+        	title: '攻修',
         	sortable : true,
         },  {
+        	field: 'expt_fangyu',
+        	title: '防修',
+        	sortable : true,
+        },  {
+        	field: 'expt_fashu',
+        	title: '法修',
+        	sortable : true,
+        },  {
+        	field: 'expt_kangfa',
+        	title: '抗法',
+        	sortable : true,
+        },  {
+        	field: 'bb_expt_gongji',
+        	title: '攻',
+        	sortable : true,
+        },  {
+            field: 'bb_expt_fangyu',
+            title: '防',
+            sortable : true,
+        },  {
+            field: 'bb_expt_fashu',
+            title: '法',
+            sortable : true,
+        },  {
+            field: 'bb_expt_kangfa',
+            title: '抗法',
+            sortable : true,
+        },  {
             field: 'expt_total',
-            title: '人修',
-            formatter: exptformatter,
+            title: '总人修',
+           // formatter: exptformatter,
             sortable : true,
         },  {
             field: 'bb_expt_total',
-            title: '宠修',
-            formatter: bbexptformatter,
+            title: '总宠修',
+           // formatter: bbexptformatter,
             sortable : true,
         }, {
             field: 'full_life_skill_num',
@@ -173,9 +202,13 @@ function loadKwType(){
         	align: 'center',
         	sortable : true,
         },{
+        	field: 'server_name',
         	title: '区服',
         	formatter: serverformat,
-        	visible: false,
+        },{
+        	field: 'getTime',
+        	title: '获取时间',
+        	sortable : true,
         },{
         	title: '操作',
         	formatter: operateFormatter,

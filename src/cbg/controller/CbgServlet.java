@@ -48,6 +48,9 @@ public class CbgServlet extends HttpServlet{
 		
 		Map<String,	 Object> queryparam = new HashMap<>();
 		String s = request.getParameter("queryparam");
+		if(StringUtil.isNotEmpty(request.getParameter("queryparam[getTime]"))&&request.getParameter("queryparam[getTime]").split(",").length == 2){
+			queryparam.put("getTime", request.getParameter("queryparam[getTime]"));
+		}
 		if(StringUtil.isNotEmpty(request.getParameter("queryparam[level]"))&&request.getParameter("queryparam[level]").split(",").length == 2){
 			queryparam.put("level", request.getParameter("queryparam[level]"));
 		}
