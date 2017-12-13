@@ -6,7 +6,7 @@ import java.util.Map;
 public class AllInfoEntity {
 	
 	
-	private Map<String,EquipEntity> AllEquip;//装备  1头盔  2衣服 3鞋子 4项链 5腰带 6武器
+	private Map<String,EquipEntity> AllEquip;//装备  1头盔  2衣服 3鞋子 4项链 5腰带 6武器  包含道具栏物品
 	
 	private List<SummonEntity> AllSummon;//宝宝
 	

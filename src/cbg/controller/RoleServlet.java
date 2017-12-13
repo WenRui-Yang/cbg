@@ -355,127 +355,17 @@ class MyThread implements Runnable {
 		//记录装备宝宝的性价比
 		int extendxingjiabi = 0;
 		if(null != allInfoEntity){
-			//先获取装备
+			//先获取装备 包含道具栏物品
 			Map<String, EquipEntity> allequip =  allInfoEntity.getAllEquip();
 			
-			String getUrl = "http://xyq-ios2.cbg.163.com/app2-cgi-bin//app_search.py";
-
-			StringBuffer param = new StringBuffer("act=super_query&search_type=overall_equip_search");
-			param.append("&serverid=527&page=1&app_type=xyq");
-			
+			int equiprmb = 0;
 			for (Map.Entry<String, EquipEntity> entry : allequip.entrySet()) {  
 				EquipEntity tmpEquipEntity = entry.getValue();
-				String tmpkey = entry.getKey();
-				String tmpval = tmpEquipEntity.getcDesc();
-				
-				
-				
-				if(tmpkey.equals("1")){//头盔
-					//属性解析  防御 不处理魔法
-					//头盔估价
-					//extendxingjiabi += RoleEquipPriceServlet.getPriceUtil(tmpEquipEntity);
-					String s = tmpval;
-					
-					param.append("&kindid=").append("17,58");//男头 女头
-					param.append("&order_by=").append("price DESC");//按价格从低到高排序
-					
-					int begin = s.indexOf("防御 +");
-					int end = s.indexOf(" ",begin);
-					
-					param.append("&init_defense=").append(s.substring(begin+4, end));
-					
-					begin = s.indexOf("等级 ");
-					end = s.indexOf("#",begin);
-					String level = s.substring(begin+2, end).trim();
-					if(Integer.valueOf(level) >= 60){
-						param.append("&level=").append(s.substring(begin+2, end).trim());
-						param.append("&level_min=").append(level);
-						param.append("&level_max=").append(level);
-						
-					}
-					
-					
-					begin = s.indexOf("锻炼等级 ");
-					if(begin != -1){
-						param.append("&gem_level=").append(s.substring(begin+5, begin+7).trim());
-					}
-					
-					
-					begin = s.indexOf("镶嵌宝石 ");
-					end = s.indexOf("#",begin);
-					if(begin != -1){
-						String tmpstr = s.substring(begin+5, end);
-						param.append("&gem_value=").append(ParamUtil.gettejiNumber(tmpstr));
-					}
-					
-					
-					/*begin = s.indexOf("套装效果：");
-					end = s.indexOf("#",begin);
-					if(begin != -1){
-						String tmpstr = s.substring(begin+5, end);
-						//根据套装效果名称找到对应的类型
-						
-						param.append("&suit_effect=").append(s.substring(begin+5, end));
-					}*/
-					
-					begin = s.indexOf("特技：");
-					end = s.indexOf("#",begin);
-					if(begin != -1){
-						//特技名称
-						String tmpstr = s.substring(begin+3, end);
-						//根据套装效果名称找到对应的类型
-						param.append("&special_skill=").append(ParamUtil.gettejiNumber(tmpstr));
-					}
-					
-					begin = s.indexOf("特效：");
-					end = s.indexOf("#",begin);
-					if(begin != -1){
-						//特校名称
-						String tmpstr = s.substring(begin+3, end);
-						//根据套装效果名称找到对应的类型
-						param.append("&special_effect=").append(ParamUtil.gettexiaoNumber(tmpstr));
-					}
-					
-					
-					begin = s.indexOf("开运孔数：");
-					end = s.indexOf("#",begin);
-					
-					if(begin != -1){
-						//特校名称
-						String tmpstr = s.substring(begin+5, end);
-						//根据套装效果名称找到对应的类型
-						param.append("&special_effect=").append(s.substring(begin+5, end));
-					}
-					
-					
-					
-					String reqstr = HttpRequest.sendGet(getUrl, String.valueOf(param));
-					
-					org.json.JSONObject toukuiobj = JSONParse.getJSONObject(reqstr);
-					
-					
-					
-				}else if(tmpkey.equals("2")){
-					
-				}else if(tmpkey.equals("3")){
-					
-				}else if(tmpkey.equals("4")){
-					
-				}else if(tmpkey.equals("5")){
-					
-				}else if(tmpkey.equals("6")){
-					tmpEquipEntity.getiType();
-					tmpEquipEntity.getcDesc();
-					//取到武器的等级     伤害 命中 宝石等级 双加   
-					//去调用全服搜索装备的接口  查到10把武器的价格 取一个平均值
-					//宝宝的调用方式类似
-					
-					
-				}
-			  
+				RoleEquipPriceServlet roleEquipPriceServlet = new RoleEquipPriceServlet();
+				equiprmb += roleEquipPriceServlet.getPriceUtil(tmpEquipEntity);
 			}  
 			
-			
+			extendxingjiabi = equiprmb / 1200;
 		}
 		
 		PriceUtil priceUtil = new PriceUtil();
